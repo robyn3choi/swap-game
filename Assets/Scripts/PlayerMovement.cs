@@ -2,28 +2,62 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour {
+public class PlayerMovement : MonoBehaviour
+{
+
+    public enum PlayerType
+    {
+        ONE,
+        TWO
+    }
 
     public float speed;
+    public PlayerType type;
 
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update()
+    {
 
-        if (Input.GetKey(KeyCode.A))
+        switch (type)
         {
-            transform.Translate(Vector2.left * speed);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(Vector2.right * speed);
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(Vector2.up * speed);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.Translate(Vector2.down * speed);
+
+            case PlayerType.ONE:
+                if (Input.GetKey(KeyCode.A))
+                {
+                    transform.Translate(Vector2.left * speed);
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    transform.Translate(Vector2.right * speed);
+                }
+                if (Input.GetKey(KeyCode.W))
+                {
+                    transform.Translate(Vector2.up * speed);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    transform.Translate(Vector2.down * speed);
+                }
+                break;
+
+            case PlayerType.TWO:
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    transform.Translate(Vector2.left * speed);
+                }
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    transform.Translate(Vector2.right * speed);
+                }
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    transform.Translate(Vector2.up * speed);
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    transform.Translate(Vector2.down * speed);
+                }
+                break;
         }
     }
 }
