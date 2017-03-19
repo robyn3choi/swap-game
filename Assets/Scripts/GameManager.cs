@@ -5,11 +5,10 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    int playerOneScore = 0;
-    int playerTwoScore = 0;
     string formattedTime = "2:05";
 
     public int timeLeft = 125;
+    public int spawnInterval = 10;
 
     bool gameOver;
 
@@ -56,7 +55,8 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        if (timeLeft % 10 == 0) {
+        if (timeLeft % spawnInterval == 0)
+        {
             EnemySpawner.instance.SpawnEnemyWave();
         }
             
