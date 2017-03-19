@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 //    Vector3 previous;
 //    float velocity;
 
-    int direction = 0; // 0 = not moving, 1 = up, 2 = right, 3 = down, 4 = left 
+    public int direction = 0; // 0 = not moving, 1 = up, 2 = right, 3 = down, 4 = left 
 
     // Update is called once per frame
     void Update()
