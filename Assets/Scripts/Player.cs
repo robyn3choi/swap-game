@@ -20,8 +20,8 @@ public class Player : MonoBehaviour {
 
 	public void LoseHealth (int lossHealth) {
 		// Set animation of player being hit
-		healthPoint -= lossHealth;
-		if (healthPoint <= 0) {
+		healthPoints -= lossHealth;
+		if (healthPoints <= 0) {
 			// kill the player
 		}
 	}
