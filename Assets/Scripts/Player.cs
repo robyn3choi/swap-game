@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     private int score;
-	private int healthPoints = 1;
+	private int healthPoints = 3;
 
 
 	// Use this for initialization
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	public void LoseHealth (int lossHealth) {
@@ -26,7 +26,20 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-    public int GetScore() {
+    public int GetScore () {
         return this.score;
     }
+
+    public int GetHealth ()
+    {
+        return this.healthPoints;
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.tag == "Enemy") {
+            LoseHealth(1);   
+        }
+    }
+
 }
