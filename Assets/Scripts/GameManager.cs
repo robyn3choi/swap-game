@@ -10,8 +10,6 @@ public class GameManager : MonoBehaviour {
     public int timeLeft = 125;
     public int spawnInterval = 10;
 
-    bool gameOver;
-
     string endGameString;
 
     public Text timer;
@@ -37,7 +35,10 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (playerOne.GetHealth() <= 0 && playerTwo.GetHealth() <= 0)
+        {
+            EndGame();
+        }
 	}
 
     void StartCounting() {
@@ -69,7 +70,6 @@ public class GameManager : MonoBehaviour {
     }
 
     void EndGame() {
-        gameOver = true;
         if (playerOne.GetScore() == playerTwo.GetScore()) {
             endGameString = "DRAW";
         }
