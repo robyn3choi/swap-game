@@ -16,29 +16,37 @@ public class PlayerMovement : MonoBehaviour
     public Animator playerAnim;
     public Rigidbody2D playerRB;
 
+//    Vector3 previous;
+//    float velocity;
+
+    int direction = 0; // 0 = not moving, 1 = up, 2 = right, 3 = down, 4 = left 
+
     // Update is called once per frame
     void Update()
     {
-
+        direction = 0;
         switch (type)
         {
-
             case PlayerType.ONE:
                 if (Input.GetKey(KeyCode.A))
                 {
                     transform.Translate(Vector2.left * speed);
+                    direction = 4;
                 }
                 if (Input.GetKey(KeyCode.D))
                 {
                     transform.Translate(Vector2.right * speed);
+                    direction = 2;
                 }
                 if (Input.GetKey(KeyCode.W))
                 {
                     transform.Translate(Vector2.up * speed);
+                    direction = 1;
                 }
                 if (Input.GetKey(KeyCode.S))
                 {
                     transform.Translate(Vector2.down * speed);
+                    direction = 3;
                 }
                 break;
 
@@ -46,22 +54,29 @@ public class PlayerMovement : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     transform.Translate(Vector2.left * speed);
+                    direction = 4;
                 }
                 if (Input.GetKey(KeyCode.RightArrow))
                 {
                     transform.Translate(Vector2.right * speed);
+                    direction = 2;
                 }
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     transform.Translate(Vector2.up * speed);
+                    direction = 1;
                 }
                 if (Input.GetKey(KeyCode.DownArrow))
                 {
                     transform.Translate(Vector2.down * speed);
+                    direction = 3;
                 }
                 break;
         }
-        playerAnim.SetFloat("xVelocity", playerRB.velocity.x);
-        playerAnim.SetFloat("yVelocity", playerRB.velocity.y);
+        playerAnim.SetInteger("direction", direction);
+//        velocity = ((transform.position - previous).magnitude) / Time.deltaTime;
+//        previous = transform.position;
+//        playerAnim.SetFloat("xVelocity", playerRB.velocity.x);
+//        playerAnim.SetFloat("yVelocity", playerRB.velocity.y);
     }
 }
