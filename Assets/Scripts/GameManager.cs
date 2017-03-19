@@ -7,9 +7,9 @@ public class GameManager : MonoBehaviour {
 
     int playerOneScore = 0;
     int playerTwoScore = 0;
-    string formattedTime = "2:00";
+    string formattedTime = "2:05";
 
-    public int timeLeft = 120;
+    public int timeLeft = 125;
 
     bool gameOver;
 
@@ -20,6 +20,16 @@ public class GameManager : MonoBehaviour {
     public Player playerOne;
     public Player playerTwo;
 
+    public static GameManager instance = null;
+
+    void Awake() {
+        if (instance == null) {
+            instance = this;
+        }    
+        else if (instance != this) {
+            Destroy(gameObject);
+        }
+    }
 
 	// Use this for initialization
 	void Start () {
@@ -43,7 +53,13 @@ public class GameManager : MonoBehaviour {
         }
         else {
             EndGame();
+            return;
         }
+
+        if (timeLeft % 10 == 0) {
+            EnemySpawner.instance.SpawnEnemyWave();
+        }
+            
     }
 
     void FormatTime() {
