@@ -7,14 +7,19 @@ public class GameManager : MonoBehaviour {
 
     int playerOneScore = 0;
     int playerTwoScore = 0;
-    int timeLeft = 120;
     string formattedTime = "2:00";
+
+    public int timeLeft = 120;
 
     bool gameOver;
 
     string endGameString;
 
     public Text timer;
+    public Board board;
+    public Player playerOne;
+    public Player playerTwo;
+
 
 	// Use this for initialization
 	void Start () {
@@ -49,10 +54,11 @@ public class GameManager : MonoBehaviour {
 
     void EndGame() {
         gameOver = true;
-        if (playerOneScore == playerTwoScore) {
+        if (playerOne.GetScore() == playerTwo.GetScore()) {
             endGameString = "DRAW";
         }
-        else if (playerOneScore > playerTwoScore) {
+        else if (playerOne.GetScore() > playerTwo.GetScore())
+        {
             endGameString = "PLAYER ONE WINS!";
         }
         else {
