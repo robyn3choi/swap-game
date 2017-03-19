@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float speed;
     public PlayerType type;
+    public Animator playerAnim;
+    public Rigidbody2D playerRB;
 
     // Update is called once per frame
     void Update()
@@ -59,5 +61,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 break;
         }
+        playerAnim.SetFloat("xVelocity", playerRB.velocity.x);
+        playerAnim.SetFloat("yVelocity", playerRB.velocity.y);
     }
 }
