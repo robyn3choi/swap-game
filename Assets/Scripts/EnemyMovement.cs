@@ -5,22 +5,24 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour {
 
     public float speed;
-    public Transform Player1;
-    public Transform Player2;
-    private float distancePlay1;
-    private float distancePlay2;
     private Vector2 lastTarget;
+
+    private GameObject Player1;
+    private GameObject Player2;
 
     // Use this for initialization
     void Start () {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        Player1 = players[0];
+        Player2 = players[1];
         lastTarget = Vector2.MoveTowards(transform.position, Player1.transform.position, speed * Time.deltaTime);
     }
 
 	
 	// Update is called once per frame
 	void Update () {
-        distancePlay1 = Vector2.Distance(transform.position, Player1.transform.position);
-        distancePlay2 = Vector2.Distance(transform.position, Player2.transform.position);
+        float distancePlay1 = Vector2.Distance(transform.position, Player1.transform.position);
+        float distancePlay2 = Vector2.Distance(transform.position, Player2.transform.position);
 
         if (distancePlay1 < distancePlay2)
         {

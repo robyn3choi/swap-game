@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour {
-    public GameObject EnemyPrefab;
-    public GameObject[] enemies;
-    public int poolSize = 312;
 
+    public GameObject enemyPrefab;
+    public int poolSize = 256;
     public Transform[] spawnPoints;
+    
+
+    private List<GameObject> enemies;
+    public int waveSize = 5;
 
     public static EnemySpawner instance = null;
 
@@ -21,22 +24,43 @@ public class EnemySpawner : MonoBehaviour {
     }
 
     void Start () {
+        enemies = new List<GameObject>();
         for (int i=0; i<poolSize; i++) {
-            enemies[i] = Instantiate(EnemyPrefab, transform.position, Quaternion.identity);
-            enemies[i].GetComponent<RobynEnemy>().alive = false;
+            GameObject enemy = (GameObject)Instantiate(enemyPrefab);
+            enemy.SetActive(false);
+            enemies.Add(enemy);
         }
+
+    }
+
+    void Update() { 
+        
     }
 
     public void SpawnEnemyWave() {
-        print("spawnwave");
-        for (int i=0; i<spawnPoints.Length; i++) {
-            for (int j=0; j<poolSize; j++) {
-                if (enemies[j].GetComponent<RobynEnemy>().alive = false) {
-                    enemies[i].transform.position = spawnPoints[i].position;
-                    enemies[i].GetComponent<RobynEnemy>().alive = true;
-                    break;
-                }
+        Vector2 spawnPosition = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+        List<GameObject> enemiesToSpawn = new List<GameObject>();
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject enemy = enemies[i];
+            if (!enemy.activeSelf)
+            {
+                enemiesToSpawn.Add(enemy);
             }
+
+            if (enemiesToSpawn.Count == waveSize) {
+                StartCoroutine(Spawn(1.5f, enemiesToSpawn, spawnPosition));
+                break;
+            }
+        }
+    }
+
+    IEnumerator Spawn(float spawnDelay, List<GameObject> enemiesToSpawn, Vector2 position)
+    {
+        foreach (GameObject enemy in enemiesToSpawn) {
+            yield return new WaitForSeconds(spawnDelay);
+            enemy.transform.position = position;
+            enemy.SetActive(true);
         }
     }
 
