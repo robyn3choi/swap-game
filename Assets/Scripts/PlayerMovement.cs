@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public PlayerType type;
     public Animator playerAnim;
     public Rigidbody2D playerRB;
+    public Transform opponent;
 
 //    Vector3 previous;
 //    float velocity;
@@ -48,6 +49,10 @@ public class PlayerMovement : MonoBehaviour
                     transform.Translate(Vector2.down * speed);
                     direction = 3;
                 }
+                if (Input.GetKeyDown(KeyCode.E)) 
+                {
+                    Swap();    
+                }
                 break;
 
             case PlayerType.TWO:
@@ -71,12 +76,18 @@ public class PlayerMovement : MonoBehaviour
                     transform.Translate(Vector2.down * speed);
                     direction = 3;
                 }
+                if (Input.GetKeyDown(KeyCode.Quote)) 
+                {
+                    Swap();    
+                }
                 break;
         }
         playerAnim.SetInteger("direction", direction);
-//        velocity = ((transform.position - previous).magnitude) / Time.deltaTime;
-//        previous = transform.position;
-//        playerAnim.SetFloat("xVelocity", playerRB.velocity.x);
-//        playerAnim.SetFloat("yVelocity", playerRB.velocity.y);
+    }
+
+    void Swap() {
+        Vector2 opponentPosition = opponent.position;
+        opponent.position = transform.position;
+        transform.position = opponentPosition;
     }
 }
