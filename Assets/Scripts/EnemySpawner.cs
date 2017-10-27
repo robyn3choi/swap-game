@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour {
     public GameObject enemyPrefab;
     public int poolSize = 256;
     public Transform[] spawnPoints;
-    
+    public float spawnDelay = 0.1f;
 
     private List<GameObject> enemies;
     public int waveSize = 5;
@@ -24,21 +24,36 @@ public class EnemySpawner : MonoBehaviour {
     }
 
     void Start () {
+        Init();
+    }
+
+    void Init()
+    {
         enemies = new List<GameObject>();
-        for (int i=0; i<poolSize; i++) {
+        for (int i = 0; i < poolSize; i++)
+        {
             GameObject enemy = (GameObject)Instantiate(enemyPrefab);
             enemy.SetActive(false);
             enemies.Add(enemy);
         }
-
     }
 
-    void Update() { 
-        
+    public void EndGame()
+    {
+        foreach (GameObject enemy in enemies)
+        {
+            enemy.SetActive(false);
+        }
+    }
+
+    public void ResetEnemies()
+    {
+        EndGame();
+        Init();
     }
 
     public void SpawnEnemyWave() {
-        Vector2 spawnPosition = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+        
         List<GameObject> enemiesToSpawn = new List<GameObject>();
         for (int i = 0; i < poolSize; i++)
         {
@@ -49,17 +64,19 @@ public class EnemySpawner : MonoBehaviour {
             }
 
             if (enemiesToSpawn.Count == waveSize) {
-                StartCoroutine(Spawn(1.5f, enemiesToSpawn, spawnPosition));
+                StartCoroutine(Spawn(enemiesToSpawn));
                 break;
             }
         }
+        waveSize += 5;
     }
 
-    IEnumerator Spawn(float spawnDelay, List<GameObject> enemiesToSpawn, Vector2 position)
+    IEnumerator Spawn(List<GameObject> enemiesToSpawn)
     {
         foreach (GameObject enemy in enemiesToSpawn) {
             yield return new WaitForSeconds(spawnDelay);
-            enemy.transform.position = position;
+            enemy.transform.position = spawnPoints[Random.Range(0, spawnPoints.Length)].transform.position;
+            enemy.GetComponent<Enemy>().health = 2;
             enemy.SetActive(true);
         }
     }

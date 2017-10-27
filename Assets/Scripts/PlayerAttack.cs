@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player1Attack : MonoBehaviour {
+public class PlayerAttack : MonoBehaviour {
 
     GameObject Player;
     GameObject Sword;
     private int direction; // 0 = not moving, 1 = up, 2 = right, 3 = down, 4 = left 
-                           // Use this for initialization
+
+    Animator swordAnim;
+
     void Start () {
         direction = GetComponent<PlayerMovement>().direction;
+        swordAnim = transform.GetChild(0).GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    string formattedTime = "2:05";
+    string formattedTime = "1:00";
 
-    public int timeLeft = 125;
+    public int timeLeft = 60;
     public int spawnInterval = 10;
 
     string endGameString;
@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour {
     public Board board;
     public Player playerOne;
     public Player playerTwo;
+    float swapTimer = 0;
+    public bool canSwap = true;
+    public Slider swapSlider;
+    public Text swapSliderText;
 
     public static GameManager instance = null;
 
@@ -30,14 +34,22 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        StartCounting();
+        swapSliderText = swapSlider.transform.Find("Text").GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (playerOne.GetHealth() <= 0 && playerTwo.GetHealth() <= 0)
+        if (!canSwap)
         {
-            EndGame();
+            swapTimer += Time.deltaTime;
+            swapSlider.value = swapTimer;
+            if (swapTimer >= 2)
+            {
+                swapSlider.value = 2;
+                canSwap = true;
+                swapTimer = 0;
+                swapSliderText.text = "CAN SWAP";
+            }
         }
 	}
 
@@ -47,20 +59,18 @@ public class GameManager : MonoBehaviour {
 
     void Count() {
         if (timeLeft > 0) {
+            if (timeLeft % spawnInterval == 0)
+            {
+                EnemySpawner.instance.SpawnEnemyWave();
+            }
             timeLeft--;
             FormatTime();
             timer.text = formattedTime;
         }
         else {
             EndGame();
-            return;
-        }
-
-        if (timeLeft % spawnInterval == 0)
-        {
-            EnemySpawner.instance.SpawnEnemyWave();
-        }
-            
+            CancelInvoke();
+        }   
     }
 
     void FormatTime() {
@@ -70,6 +80,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void EndGame() {
+        EnemySpawner.instance.EndGame();
         if (playerOne.GetScore() == playerTwo.GetScore()) {
             endGameString = "DRAW";
         }
@@ -81,5 +92,25 @@ public class GameManager : MonoBehaviour {
             endGameString = "PLAYER TWO WINS!";
         }
         print(endGameString);
+    }
+
+    public void Play()
+    {
+        StartCounting();
+    }
+
+    public void Reset()
+    {
+        CancelInvoke();
+        swapTimer = 0;
+        swapSlider.value = 2;
+        swapSliderText.text = "CAN SWAP";
+        canSwap = true;
+        timeLeft = 60;
+        formattedTime = "1:00";
+        timer.text = formattedTime;
+        playerOne.Reset();
+        playerTwo.Reset();
+        EnemySpawner.instance.ResetEnemies();
     }
 }

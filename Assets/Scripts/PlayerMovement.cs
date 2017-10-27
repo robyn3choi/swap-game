@@ -5,89 +5,142 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    public enum PlayerType
-    {
-        ONE,
-        TWO
-    }
-
     public float speed;
-    public PlayerType type;
     public Animator playerAnim;
     public Rigidbody2D playerRB;
     public Transform opponent;
+    public ParticleSystem particles;
+    ParticleSystem oppParticles;
 
-//    Vector3 previous;
-//    float velocity;
+    public int direction = 3; // 1 = up, 2 = right, 3 = down, 4 = left 
+    int prevDirection;
 
-    public int direction = 0; // 0 = not moving, 1 = up, 2 = right, 3 = down, 4 = left 
+    Transform swordPivotParent;
+    Animator swordAnim;
+    Player playerScript;
+
+    void Awake()
+    {
+        particles = transform.Find("Particles").GetComponent<ParticleSystem>();
+    }
+
+    void Start()
+    {
+        playerScript = GetComponent<Player>();
+        swordPivotParent = transform.GetChild(0);
+        swordAnim = swordPivotParent.GetChild(0).GetComponent<Animator>();
+        oppParticles = opponent.GetComponent<PlayerMovement>().particles;
+    }
 
     // Update is called once per frame
     void Update()
     {
-        direction = 0;
-        switch (type)
+        switch (playerScript.type)
         {
-            case PlayerType.ONE:
+            case Player.PlayerType.ONE:
                 if (Input.GetKey(KeyCode.A))
                 {
                     transform.Translate(Vector2.left * speed);
                     direction = 4;
                 }
-                if (Input.GetKey(KeyCode.D))
+                else if (Input.GetKey(KeyCode.D))
                 {
                     transform.Translate(Vector2.right * speed);
                     direction = 2;
                 }
-                if (Input.GetKey(KeyCode.W))
+                else if (Input.GetKey(KeyCode.W))
                 {
                     transform.Translate(Vector2.up * speed);
                     direction = 1;
                 }
-                if (Input.GetKey(KeyCode.S))
+                else if (Input.GetKey(KeyCode.S))
                 {
                     transform.Translate(Vector2.down * speed);
                     direction = 3;
                 }
-                if (Input.GetKeyDown(KeyCode.E)) 
+                if (Input.GetKeyDown(KeyCode.T))
                 {
-                    Swap();    
+                    Swap();
+                }
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    Attack();
                 }
                 break;
 
-            case PlayerType.TWO:
+            case Player.PlayerType.TWO:
                 if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     transform.Translate(Vector2.left * speed);
                     direction = 4;
                 }
-                if (Input.GetKey(KeyCode.RightArrow))
+                else if (Input.GetKey(KeyCode.RightArrow))
                 {
                     transform.Translate(Vector2.right * speed);
                     direction = 2;
                 }
-                if (Input.GetKey(KeyCode.UpArrow))
+                else if (Input.GetKey(KeyCode.UpArrow))
                 {
                     transform.Translate(Vector2.up * speed);
                     direction = 1;
                 }
-                if (Input.GetKey(KeyCode.DownArrow))
+                else if (Input.GetKey(KeyCode.DownArrow))
                 {
                     transform.Translate(Vector2.down * speed);
                     direction = 3;
                 }
-                if (Input.GetKeyDown(KeyCode.Quote)) 
+                if (Input.GetKeyDown(KeyCode.Backslash))
                 {
-                    Swap();    
+                    Swap();
+                }
+                if (Input.GetKeyDown(KeyCode.RightBracket))
+                {
+                    Attack();
                 }
                 break;
         }
-        playerAnim.SetInteger("direction", direction);
+        if (direction != prevDirection)
+        {
+            playerAnim.SetInteger("direction", direction);
+        }
+
+        prevDirection = direction;
     }
 
     void Swap() {
-        Vector2 opponentPosition = opponent.position;
-        opponent.position = transform.position;
-        transform.position = opponentPosition;
+        if (GameManager.instance.canSwap)
+        {
+            Vector2 opponentPosition = opponent.position;
+            opponent.position = transform.position;
+            transform.position = opponentPosition;
+            GameManager.instance.swapSlider.value = 0;
+            GameManager.instance.swapSliderText.text = "CAN'T SWAP";
+            GameManager.instance.canSwap = false;
+            particles.Play();
+            oppParticles.Play();
+        }
+    }
+
+    void Attack()
+    {
+        if (playerScript.deadState) { return; }
+
+        float angle = 0;
+        if (direction == 1)
+        {
+            angle = 180;
+        }
+        else if (direction == 2)
+        {
+            angle = 90;
+        }
+        else if (direction == 4)
+        {
+            angle = -90;
+        }
+        swordPivotParent.localEulerAngles = new Vector3(0, 0, angle);
+
+        swordAnim.SetTrigger("Swing");
+
     }
 }
