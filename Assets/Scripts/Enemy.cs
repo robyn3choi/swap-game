@@ -17,6 +17,12 @@ public class Enemy : MonoBehaviour {
     Rigidbody2D rb;
     ParticleSystem particles;
     public Vector2 randomPosition;
+    AudioSource audioSource;
+    public AudioClip hitAudio;
+    public AudioClip dieAudio;
+    SpriteRenderer sprite;
+    BoxCollider2D coll;
+    float dieTimer = 1;
 
     // Use this for initialization
     void Start () {
@@ -29,6 +35,10 @@ public class Enemy : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
         particles = transform.GetChild(0).GetComponent<ParticleSystem>();
         randomPosition = new Vector2(Random.Range(-999f, 999f), Random.Range(-999f, 999f));
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = hitAudio;
+        sprite = GetComponent<SpriteRenderer>();
+        coll = GetComponent<BoxCollider2D>();
     }
 
 	
@@ -85,9 +95,30 @@ public class Enemy : MonoBehaviour {
             particles.Play();
             if (health <= 0)
             {
+                audioSource.clip = dieAudio;
                 collision.transform.parent.parent.parent.GetComponent<Player>().AddPoint();
-                gameObject.SetActive(false);
+                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0);
+                coll.enabled = false;
+                StartCoroutine("Die");
             }
+            else
+            {
+                audioSource.clip = hitAudio;
+            }
+            audioSource.Play();
+        }
+    }
+
+    IEnumerator Die()
+    {
+        dieTimer -= Time.deltaTime;
+        if (dieTimer < 0)
+        {
+            dieTimer = 1;
+            gameObject.SetActive(false);
+            sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1);
+            coll.enabled = true;
+            yield break;
         }
     }
 }

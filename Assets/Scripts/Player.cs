@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
     float timer = 0;
     SpriteRenderer sprite;
     public Text scoreText;
+    public AudioSource dieSfx;
 
     // Use this for initialization
     void Start () {
@@ -29,6 +30,15 @@ public class Player : MonoBehaviour {
         deadState = false;
         timer = 0;
         sprite.color = new Color(1, 1, 1, 1);
+        score = 0;
+        if (type == PlayerType.ONE)
+        {
+            scoreText.text = "P1: " + score;
+        }
+        else
+        {
+            scoreText.text = "P2: " + score;
+        }
     }
 	
 	// Update is called once per frame
@@ -54,6 +64,7 @@ public class Player : MonoBehaviour {
         if (col.gameObject.tag == "Enemy") {
             if (!deadState)
             {
+                dieSfx.Play();
                 deadState = true;
                 sprite.color = new Color(1, 1, 1, 0.5f);
             }

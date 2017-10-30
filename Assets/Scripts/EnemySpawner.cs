@@ -10,7 +10,7 @@ public class EnemySpawner : MonoBehaviour {
     public float spawnDelay = 0.1f;
 
     private List<GameObject> enemies;
-    public int waveSize = 5;
+    public int waveSize = 10;
 
     public static EnemySpawner instance = null;
 
@@ -68,7 +68,6 @@ public class EnemySpawner : MonoBehaviour {
                 break;
             }
         }
-        waveSize += 5;
     }
 
     IEnumerator Spawn(List<GameObject> enemiesToSpawn)

@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     Transform swordPivotParent;
     Animator swordAnim;
     Player playerScript;
+    public AudioSource audioSource;
 
     void Awake()
     {
@@ -43,17 +44,17 @@ public class PlayerMovement : MonoBehaviour
                     transform.Translate(Vector2.left * speed);
                     direction = 4;
                 }
-                else if (Input.GetKey(KeyCode.D))
+                if (Input.GetKey(KeyCode.D))
                 {
                     transform.Translate(Vector2.right * speed);
                     direction = 2;
                 }
-                else if (Input.GetKey(KeyCode.W))
+                if (Input.GetKey(KeyCode.W))
                 {
                     transform.Translate(Vector2.up * speed);
                     direction = 1;
                 }
-                else if (Input.GetKey(KeyCode.S))
+                if (Input.GetKey(KeyCode.S))
                 {
                     transform.Translate(Vector2.down * speed);
                     direction = 3;
@@ -74,28 +75,28 @@ public class PlayerMovement : MonoBehaviour
                     transform.Translate(Vector2.left * speed);
                     direction = 4;
                 }
-                else if (Input.GetKey(KeyCode.RightArrow))
+                if (Input.GetKey(KeyCode.RightArrow))
                 {
                     transform.Translate(Vector2.right * speed);
                     direction = 2;
                 }
-                else if (Input.GetKey(KeyCode.UpArrow))
+                if (Input.GetKey(KeyCode.UpArrow))
                 {
                     transform.Translate(Vector2.up * speed);
                     direction = 1;
                 }
-                else if (Input.GetKey(KeyCode.DownArrow))
+                if (Input.GetKey(KeyCode.DownArrow))
                 {
                     transform.Translate(Vector2.down * speed);
                     direction = 3;
                 }
                 if (Input.GetKeyDown(KeyCode.Backslash))
                 {
-                    Swap();
+                    Attack();
                 }
                 if (Input.GetKeyDown(KeyCode.RightBracket))
                 {
-                    Attack();
+                    Swap();
                 }
                 break;
         }
@@ -110,14 +111,15 @@ public class PlayerMovement : MonoBehaviour
     void Swap() {
         if (GameManager.instance.canSwap)
         {
+            GameManager.instance.swapSfx.Play();
             Vector2 opponentPosition = opponent.position;
             opponent.position = transform.position;
             transform.position = opponentPosition;
+            particles.Play();
+            oppParticles.Play();
             GameManager.instance.swapSlider.value = 0;
             GameManager.instance.swapSliderText.text = "CAN'T SWAP";
             GameManager.instance.canSwap = false;
-            particles.Play();
-            oppParticles.Play();
         }
     }
 
@@ -141,6 +143,6 @@ public class PlayerMovement : MonoBehaviour
         swordPivotParent.localEulerAngles = new Vector3(0, 0, angle);
 
         swordAnim.SetTrigger("Swing");
-
+        audioSource.Play();
     }
 }

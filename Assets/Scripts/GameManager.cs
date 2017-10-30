@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour {
     public bool canSwap = true;
     public Slider swapSlider;
     public Text swapSliderText;
+    public AudioSource swapSfx;
+    bool playing = false;
+    public Button playBtn;
+    public Text winText;
 
     public static GameManager instance = null;
 
@@ -35,6 +39,7 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         swapSliderText = swapSlider.transform.Find("Text").GetComponent<Text>();
+        swapSfx = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -82,21 +87,21 @@ public class GameManager : MonoBehaviour {
     void EndGame() {
         EnemySpawner.instance.EndGame();
         if (playerOne.GetScore() == playerTwo.GetScore()) {
-            endGameString = "DRAW";
+            winText.text = "DRAW";
         }
         else if (playerOne.GetScore() > playerTwo.GetScore())
         {
-            endGameString = "PLAYER ONE WINS!";
+            winText.text = "PLAYER 1 WINS";
         }
         else {
-            endGameString = "PLAYER TWO WINS!";
+            winText.text = "PLAYER 2 WINS";
         }
-        print(endGameString);
     }
 
     public void Play()
     {
         StartCounting();
+        playBtn.interactable = false;
     }
 
     public void Reset()
@@ -105,6 +110,7 @@ public class GameManager : MonoBehaviour {
         swapTimer = 0;
         swapSlider.value = 2;
         swapSliderText.text = "CAN SWAP";
+        winText.text = "";
         canSwap = true;
         timeLeft = 60;
         formattedTime = "1:00";
@@ -112,5 +118,6 @@ public class GameManager : MonoBehaviour {
         playerOne.Reset();
         playerTwo.Reset();
         EnemySpawner.instance.ResetEnemies();
+        playBtn.interactable = true;
     }
 }
